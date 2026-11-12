@@ -1,0 +1,52 @@
+#!/sbin/sh
+# ==============================================================================
+# 风吟调度 (Fengyin Governor) - Magisk 标准刷机执行入口脚本
+# 文件: META-INF/com/google/android/update-binary
+# 作用: Recovery (TWRP/OrangeFox) 或 Magisk App 刷入 zip 安装包时的首要执行二进制入口
+# 流程:
+#   1. 设置默认文件权限掩码 (umask 022)
+#   2. 挂载 /data 分区并检测 Magisk 环境
+#   3. 加载 Magisk 官方工具函数库 (/data/adb/magisk/util_functions.sh)
+#   4. 校验 Magisk 最低兼容版本 (v20.4+ / versionCode 20400)
+#   5. 触发 install_module 执行模块解压、customize.sh 执行与环境配置
+# ==============================================================================
+
+#################
+# 基础初始化设置
+#################
+
+# 设置新建文件的默认权限掩码 (目录 755, 文件 644)
+umask 022
+
+# 在尚未加载 util_functions.sh 前临时定义的界面打印函数
+ui_print() { echo "$1"; }
+
+# 提示要求新版 Magisk 并异常终止安装
+require_new_magisk() {
+  ui_print "*******************************"
+  ui_print " Please install Magisk v20.4+! "
+  ui_print "*******************************"
+  exit 1
+}
+
+#########################
+# 加载 Magisk 核心工具库
+#########################
+
+# 获取安装器传入的输出管道描述符与刷机包路径
+OUTFD=$2
+ZIPFILE=$3
+
+# 尝试挂载数据分区
+mount /data 2>/dev/null
+
+# 检测 Magisk 核心函数库是否存在
+[ -f /data/adb/magisk/util_functions.sh ] || require_new_magisk
+# 加载 Magisk 官方安装框架
+. /data/adb/magisk/util_functions.sh
+# 校验版本是否满足最低版本要求
+[ $MAGISK_VER_CODE -lt 20400 ] && require_new_magisk
+
+# 启动标准模块安装流 (解压并执行 customize.sh)
+install_module
+exit 0

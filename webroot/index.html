@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#070a12">
+    <title>风吟调度 控制面板</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 液态流体光斑背景层 (Liquid Blobs Layer) -->
+    <div class="liquid-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="liquid-mesh-overlay"></div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="app-container">
+        <!-- 顶栏导航 (Liquid Glass Header) -->
+        <header class="glass-header">
+            <div class="header-left">
+                <div class="logo-waterdrop">
+                    <span class="logo-icon">🍃</span>
+                    <span class="waterdrop-shine"></span>
+                </div>
+                <div class="title-group">
+                    <h1 class="app-title">风吟调度</h1>
+                    <span class="version-badge" id="module-version">v8.2</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="soc-pill" id="soc-badge">SM8650</div>
+                <div class="env-pill" id="env-badge">
+                    <span class="env-dot"></span>
+                    <span id="env-text">检测中</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 硬件状态液态胶囊条 (Hardware Live Capsule) -->
+        <section class="live-capsule-bar glass-card">
+            <div class="capsule-item">
+                <span class="capsule-icon">🔋</span>
+                <div class="capsule-info">
+                    <span class="capsule-label">电池电量</span>
+                    <span class="capsule-val" id="battery-level">--%</span>
+                </div>
+            </div>
+            <div class="capsule-divider"></div>
+            <div class="capsule-item">
+                <span class="capsule-icon">🌡️</span>
+                <div class="capsule-info">
+                    <span class="capsule-label">电池温度</span>
+                    <span class="capsule-val" id="battery-temp">--°C</span>
+                </div>
+            </div>
+            <div class="capsule-divider"></div>
+            <div class="capsule-item">
+                <span class="capsule-icon">⚡</span>
+                <div class="capsule-info">
+                    <span class="capsule-label">当前模式</span>
+                    <span class="capsule-val highlight-val" id="current-mode-text">读取中...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 模式选择区 (Liquid Glass Mode Cards) -->
+        <section class="section-container">
+            <div class="section-title-wrap">
+                <h2 class="section-title">调度模式切换</h2>
+                <span class="section-subtitle">即点即生效 · 内核级写入</span>
+            </div>
+
+            <div class="modes-grid">
+                <!-- 1. 省电模式 -->
+                <div class="glass-card mode-card" data-mode="powersave" id="card-powersave">
+                    <div class="mode-glow-accent glow-powersave"></div>
+                    <div class="card-glass-specular"></div>
+                    <div class="mode-header">
+                        <div class="mode-icon-box icon-powersave">🍃</div>
+                        <span class="mode-tag">mode 0</span>
+                    </div>
+                    <div class="mode-body">
+                        <h3 class="mode-name">省电 / 待机</h3>
+                        <p class="mode-desc">压低频率与算力上限，激进限制后台唤醒，日常续航首选。</p>
+                    </div>
+                    <div class="mode-footer">
+                        <span class="mode-status-text">点击切换</span>
+                        <div class="status-indicator"></div>
+                    </div>
+                </div>
+
+                <!-- 2. 均衡模式 -->
+                <div class="glass-card mode-card" data-mode="balance" id="card-balance">
+                    <div class="mode-glow-accent glow-balance"></div>
+                    <div class="card-glass-specular"></div>
+                    <div class="mode-header">
+                        <div class="mode-icon-box icon-balance">⚖️</div>
+                        <span class="mode-tag">mode 1</span>
+                    </div>
+                    <div class="mode-body">
+                        <h3 class="mode-name">日常均衡</h3>
+                        <p class="mode-desc">释放前台 100% 满血算力，施加轻微负 boost，流畅丝滑不发热。</p>
+                    </div>
+                    <div class="mode-footer">
+                        <span class="mode-status-text">点击切换</span>
+                        <div class="status-indicator"></div>
+                    </div>
+                </div>
+
+                <!-- 3. 性能模式 -->
+                <div class="glass-card mode-card" data-mode="performance" id="card-performance">
+                    <div class="mode-glow-accent glow-performance"></div>
+                    <div class="card-glass-specular"></div>
+                    <div class="mode-header">
+                        <div class="mode-icon-box icon-performance">🚀</div>
+                        <span class="mode-tag">mode 2</span>
+                    </div>
+                    <div class="mode-body">
+                        <h3 class="mode-name">游戏性能</h3>
+                        <p class="mode-desc">垫高最小算力底线至 30%，中大核起频零延迟，高频持久不掉帧。</p>
+                    </div>
+                    <div class="mode-footer">
+                        <span class="mode-status-text">点击切换</span>
+                        <div class="status-indicator"></div>
+                    </div>
+                </div>
+
+                <!-- 4. 极速模式 -->
+                <div class="glass-card mode-card" data-mode="fast" id="card-fast">
+                    <div class="mode-glow-accent glow-fast"></div>
+                    <div class="card-glass-specular"></div>
+                    <div class="mode-header">
+                        <div class="mode-icon-box icon-fast">🔥</div>
+                        <span class="mode-tag">mode 3</span>
+                    </div>
+                    <div class="mode-body">
+                        <h3 class="mode-name">极速释放</h3>
+                        <p class="mode-desc">全核算力保底 50%，无等待瞬时拉满满频，极限榨干芯片潜能。</p>
+                    </div>
+                    <div class="mode-footer">
+                        <span class="mode-status-text">点击切换</span>
+                        <div class="status-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CPU 核心簇实时监控看板 -->
+        <section class="section-container">
+            <div class="section-title-wrap">
+                <div class="title-with-toggle">
+                    <h2 class="section-title">核心簇实时频率</h2>
+                    <div class="live-badge" id="live-indicator">
+                        <span class="pulse-ring"></span>
+                        <span class="live-dot"></span>
+                        <span class="live-text">实时</span>
+                    </div>
+                </div>
+                <button class="glass-btn-icon" id="btn-toggle-monitor" title="暂停/继续刷新">
+                    <span id="monitor-icon">⏸️</span>
+                </button>
+            </div>
+
+            <div class="glass-card cluster-board">
+                <!-- Policy 0 (小核) -->
+                <div class="cluster-row">
+                    <div class="cluster-meta">
+                        <span class="cluster-badge">Policy 0</span>
+                        <span class="cluster-desc">小核簇 (2x A520)</span>
+                    </div>
+                    <div class="cluster-track-wrap">
+                        <div class="cluster-progress-bar">
+                            <div class="cluster-progress-fill fill-policy0" id="progress-p0" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                    <div class="cluster-val" id="freq-p0">---- MHz</div>
+                </div>
+
+                <!-- Policy 2 (中核1) -->
+                <div class="cluster-row">
+                    <div class="cluster-meta">
+                        <span class="cluster-badge">Policy 2</span>
+                        <span class="cluster-desc">中核簇1 (3x A720)</span>
+                    </div>
+                    <div class="cluster-track-wrap">
+                        <div class="cluster-progress-bar">
+                            <div class="cluster-progress-fill fill-policy2" id="progress-p2" style="width: 35%;"></div>
+                        </div>
+                    </div>
+                    <div class="cluster-val" id="freq-p2">---- MHz</div>
+                </div>
+
+                <!-- Policy 5 (中核2) -->
+                <div class="cluster-row">
+                    <div class="cluster-meta">
+                        <span class="cluster-badge">Policy 5</span>
+                        <span class="cluster-desc">中核簇2 (2x A720)</span>
+                    </div>
+                    <div class="cluster-track-wrap">
+                        <div class="cluster-progress-bar">
+                            <div class="cluster-progress-fill fill-policy5" id="progress-p5" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                    <div class="cluster-val" id="freq-p5">---- MHz</div>
+                </div>
+
+                <!-- Policy 7 (超大核) -->
+                <div class="cluster-row">
+                    <div class="cluster-meta">
+                        <span class="cluster-badge cluster-prime">Policy 7</span>
+                        <span class="cluster-desc">超大核 (1x Cortex-X4)</span>
+                    </div>
+                    <div class="cluster-track-wrap">
+                        <div class="cluster-progress-bar">
+                            <div class="cluster-progress-fill fill-policy7" id="progress-p7" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <div class="cluster-val" id="freq-p7">---- MHz</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 便捷运维与工具操作 -->
+        <section class="section-container">
+            <div class="section-title-wrap">
+                <h2 class="section-title">快捷工具与环境</h2>
+            </div>
+            <div class="tools-grid">
+                <button class="glass-card tool-btn" id="btn-reinit">
+                    <span class="tool-icon">🔄</span>
+                    <div class="tool-info">
+                        <span class="tool-name">刷新 Scene 接口</span>
+                        <span class="tool-desc">重新生成 /data/powercfg.*</span>
+                    </div>
+                </button>
+
+                <button class="glass-card tool-btn" id="btn-lockcheck">
+                    <span class="tool-icon">🔒</span>
+                    <div class="tool-info">
+                        <span class="tool-name">权限锁定复核</span>
+                        <span class="tool-desc">检查 444 只读防反弹状态</span>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- 页脚版权与说明 -->
+        <footer class="app-footer">
+            <p class="footer-author">风吟调度 8.2 · 作者: 爱吃香菜</p>
+            <p class="footer-tip">液态玻璃架构 · 原生适配 KernelSU / APatch / MMRL</p>
+        </footer>
+    </div>
+
+    <!-- 液态玻璃浮动提示气泡 (Liquid Glass Toast) -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
