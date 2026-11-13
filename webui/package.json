@@ -1,0 +1,17 @@
+{
+  "name": "fengyin-webui",
+  "private": true,
+  "version": "8.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "kernelsu": "^3.3.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.0.0"
+  }
+}
